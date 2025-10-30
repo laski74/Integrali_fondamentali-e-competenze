@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valutazione Formativa - Integrali Indefiniti</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .tabs-container {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            background: #f9f9f9;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab-button:hover {
+            background: #f0f0f0;
+            color: #667eea;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .exercise {
+            margin-bottom: 30px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .exercise:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .exercise-text {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .exercise-text-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .exercise-number {
+            background: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+            font-size: 1.2em;
+        }
+
+        .exercise-text-content {
+            flex: 1;
+            line-height: 1.8;
+        }
+
+        .exercise-text-content h3 {
+            color: #333;
+            font-size: 1.05em;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .exercise-text-content p {
+            color: #555;
+            font-size: 0.95em;
+            margin: 8px 0;
+        }
+
+        .points {
+            background: #667eea15;
+            color: #667eea;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85em;
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+        .solution-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .solution-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .solution-button.open {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+
+        .solution-content {
+            display: none;
+            padding: 25px;
+            background: #fafafa;
+            border-top: 2px solid #e8e8e8;
+            animation: slideDown 0.3s ease;
+        }
+
+        .solution-content.open {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 2000px;
+            }
+        }
+
+        .solution-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .solution-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-title {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: #667eea;
+            border-radius: 2px;
+            margin-right: 10px;
+        }
+
+        .technique-box {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 5px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .error-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 5px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .error-box strong {
+            color: #ff6f00;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 5px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .formula {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+            overflow-x: auto;
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        .steps {
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .step {
+            margin: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.8;
+            font-size: 0.95em;
+        }
+
+        .step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: 0;
+            background: #667eea;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75em;
+            font-weight: 700;
+        }
+
+        .footer {
+            background: #f9f9f9;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .subtext {
+            display: block;
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 5px;
+            font-weight: 400;
+        }
+
+        .sub-exercise {
+            margin: 15px 0;
+            padding: 12px;
+            background: white;
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .sub-exercise-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.6em;
+            }
+
+            .tabs-container {
+                flex-wrap: wrap;
+            }
+
+            .tab-button {
+                flex: 1 1 100%;
+                padding: 15px;
+                min-width: 100px;
+            }
+
+            .exercise-text-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .exercise-number {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Valutazione Formativa</h1>
+            <p>Integrali Indefiniti - Soluzioni Dettagliate</p>
+        </div>
+
+        <div class="tabs-container">
+            <button class="tab-button active" onclick="switchTab('fondamentali')">Soluzioni Fondamentali</button>
+            <button class="tab-button" onclick="switchTab('provaA')">Soluzioni Prova A</button>
+            <button class="tab-button" onclick="switchTab('provaB')">Soluzioni Prova B</button>
+        </div>
+
+        <!-- SOLUZIONI FONDAMENTALI -->
+        <div id="fondamentali" class="tab-content active">
+            <!-- Esercizio 1 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">1</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE INDEFINITO - Vero o Falso?</h3>
+                            <p>Stabilisci se le seguenti affermazioni sono vere o false.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">a. $$y = 3x + 2 \text{ e } y = 3x - 7 \text{ sono primitive della stessa funzione}$$</div>
+                        <div class="success-box"><strong>✓ VERO</strong></div>
+                        <div class="technique-box">
+                            <strong>Spiegazione:</strong> Due funzioni sono primitive della stessa funzione se la loro derivata è identica. Entrambe hanno derivata $$y' = 3$$, quindi sono primitive di $$f(x) = 3$$. Le primitive di una stessa funzione differiscono per una costante arbitraria (la costante di integrazione).
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errore comune:</strong> Pensare che due primitive devono essere identiche. No! Le primitive differiscono sempre per una costante.
+                        </div>
+                    </div>
+
+                    <div class="solution-section">
+                        <div class="section-title">b. La derivata di $$\int(3x^2 - 5)dx \text{ è } 6x$$</div>
+                        <div class="error-box"><strong>✗ FALSO</strong></div>
+                        <div class="technique-box">
+                            <strong>Spiegazione:</strong> Per il Teorema Fondamentale del Calcolo, la derivata di un integrale indefinito è la funzione integranda stessa.
+                            $$\frac{d}{dx}\left[\int(3x^2 - 5)dx\right] = 3x^2 - 5$$
+                            Non è $$6x$$. Il $$6x$$ sarebbe la derivata di $$\int(6x)dx$$.
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errore comune:</strong> Confondere la regola della derivata con la primitiva. La derivata di $$\int f(x)dx$$ è sempre $$f(x)$$, non un'altra cosa.
+                        </div>
+                    </div>
+
+                    <div class="solution-section">
+                        <div class="section-title">c. $$y = -\sin x \text{ è una primitiva di } y = \cos x$$</div>
+                        <div class="error-box"><strong>✗ FALSO</strong></div>
+                        <div class="technique-box">
+                            <strong>Spiegazione:</strong> Derivando $$y = -\sin x$$ si ottiene $$y' = -\cos x$$, non $$\cos x$$.
+                            $$\frac{d}{dx}[-\sin x] = -\cos x$$
+                            La primitiva corretta di $$\cos x$$ è $$y = \sin x$$.
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errore comune:</strong> Sbagliare i segni nelle derivate/primitive delle funzioni trigonometriche.
+                        </div>
+                    </div>
+
+                    <div class="solution-section">
+                        <div class="section-title">d. $$y = x^3 \text{ ha come unica primitiva } y = \frac{x^4}{4}$$</div>
+                        <div class="error-box"><strong>✗ FALSO</strong></div>
+                        <div class="technique-box">
+                            <strong>Spiegazione:</strong> La primitiva di $$f(x) = x^3$$ è $$F(x) = \frac{x^4}{4} + C$$, dove $$C$$ è una costante arbitraria. Non è l'unica primitiva perché esiste un'infinità di primitive (una per ogni valore di $$C$$).
+                            $$\int x^3 dx = \frac{x^4}{4} + C$$
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errore comune:</strong> Dimenticare la costante di integrazione $$C$$. Non esiste una "unica" primitiva, ma infinite.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 2 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">2</div>
+                        <div class="exercise-text-content">
+                            <h3>PROPRIETÀ INTEGRALE INDEFINITO</h3>
+                            <p>L'integrale $$\int 3xf(x)dx$$ è uguale a:</p>
+                            <p style="margin-top: 10px;">
+                                A) $$\int 3x dx \cdot \int f(x)dx$$
+                                | B) $$3x \int f(x)dx$$
+                                | C) $$3 \int xf(x)dx$$
+                                | D) $$f(x) \int 3x dx$$
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risposta corretta: C → $$3 \int xf(x)dx$$</div>
+                        <div class="success-box"><strong>✓ Propriet à di linearità dell'integrale indefinito</strong></div>
+                        <div class="technique-box">
+                            <strong>Formula:</strong> $$\int k \cdot f(x)dx = k \cdot \int f(x)dx$$
+                            <br><br>
+                            Puoi estrarre le costanti moltiplicative dall'integrale. Il 3 è una costante, quindi esce:
+                            $$\int 3xf(x)dx = 3 \int xf(x)dx$$
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Perché le altre sono sbagliate:</strong>
+                            <ul>
+                                <li><strong>A (SBAGLIATO):</strong> L'integrale del prodotto NON è il prodotto degli integrali.</li>
+                                <li><strong>B (SBAGLIATO):</strong> Qui trattiamo $$3x$$ come costante, ma non lo è (contiene $$x$$).</li>
+                                <li><strong>D (SBAGLIATO):</strong> Stessa confusione di B.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 3 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">3</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DI POTENZA</h3>
+                            <p>Calcola: $$\int\left(3x - \frac{1}{x^2}\right)dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Tecnica utilizzata:</strong> Riscrivere in forma di potenza e integrare termine per termine.
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Riscrivere:</strong> $$\frac{1}{x^2} = x^{-2}$$</div>
+                            <div class="step" data-step="2"><strong>Separare gli integrali:</strong> $$\int 3x dx - \int x^{-2} dx$$</div>
+                            <div class="step" data-step="3"><strong>Applicare la formula della potenza:</strong> $$\int x^n dx = \frac{x^{n+1}}{n+1} + C$$</div>
+                            <div class="step" data-step="4"><strong>Primo integrale:</strong> $$3\int x dx = 3 \cdot \frac{x^2}{2} = \frac{3x^2}{2}$$</div>
+                            <div class="step" data-step="5"><strong>Secondo integrale:</strong> $$\int x^{-2} dx = \frac{x^{-1}}{-1} = -\frac{1}{x}$$</div>
+                        </div>
+                        <div class="formula">$$\int\left(3x - \frac{1}{x^2}\right)dx = \frac{3x^2}{2} + \frac{1}{x} + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> Derivando il risultato: $$\frac{d}{dx}\left[\frac{3x^2}{2} + \frac{1}{x}\right] = 3x - \frac{1}{x^2}$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Dimenticare che $$\frac{1}{x^2} = x^{-2}$$</li>
+                                <li>Sbagliare il segno nel secondo termine: è $$+\frac{1}{x}$$, non $$-\frac{1}{x}$$</li>
+                                <li>Dimenticare la costante $$C$$ finale</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 4 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">4</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DI POTENZA</h3>
+                            <p>Calcola: $$\int\left(x^4 + \frac{1}{x}\right)dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Ricorda:</strong> $$\int \frac{1}{x}dx = \ln|x| + C$$ (primitiva del logaritmo naturale)
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Separare:</strong> $$\int x^4 dx + \int \frac{1}{x} dx$$</div>
+                            <div class="step" data-step="2"><strong>Primo integrale (potenza):</strong> $$\int x^4 dx = \frac{x^5}{5}$$</div>
+                            <div class="step" data-step="3"><strong>Secondo integrale (logaritmo):</strong> $$\int \frac{1}{x} dx = \ln|x|$$</div>
+                        </div>
+                        <div class="formula">$$\int\left(x^4 + \frac{1}{x}\right)dx = \frac{x^5}{5} + \ln|x| + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> $$\frac{d}{dx}\left[\frac{x^5}{5} + \ln|x|\right] = x^4 + \frac{1}{x}$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Trattare $$\frac{1}{x}$$ come $$x^{-1}$$ e scrivere $$\frac{x^0}{0}$$: SBAGLIATO!</li>
+                                <li>Scrivere $$\ln(x)$$ senza valore assoluto. Usa $$|x|$$ perché il logaritmo è definito solo per $$x > 0$$</li>
+                                <li>Confondere con $$\int x^{-1}dx$$: questa NON è $$\frac{x^0}{0}$$ ma $$\ln|x|$$</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 5 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">5</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DI POTENZA</h3>
+                            <p>Calcola: $$\int\left(\sqrt{x} + \frac{2}{x^3}\right)dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Ricorda:</strong> $$\sqrt{x} = x^{1/2}$$ e $$\frac{1}{x^3} = x^{-3}$$
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Riscrivere:</strong> $$\sqrt{x} = x^{1/2}$$ e $$\frac{2}{x^3} = 2x^{-3}$$</div>
+                            <div class="step" data-step="2"><strong>Separare:</strong> $$\int x^{1/2}dx + \int 2x^{-3}dx$$</div>
+                            <div class="step" data-step="3"><strong>Primo integrale:</strong> $$\int x^{1/2}dx = \frac{x^{3/2}}{3/2} = \frac{2x^{3/2}}{3} = \frac{2x\sqrt{x}}{3}$$</div>
+                            <div class="step" data-step="4"><strong>Secondo integrale:</strong> $$2\int x^{-3}dx = 2 \cdot \frac{x^{-2}}{-2} = -x^{-2} = -\frac{1}{x^2}$$</div>
+                        </div>
+                        <div class="formula">$$\int\left(\sqrt{x} + \frac{2}{x^3}\right)dx = \frac{2\sqrt{x^3}}{3} - \frac{1}{x^2} + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> Derivando si ritrova $$\sqrt{x} + \frac{2}{x^3}$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Sbagliare gli esponenti frazionari: $$\frac{1/2 + 1}{1} = \frac{3/2}{1} = 3/2$$</li>
+                                <li>Dimenticare di dividere per $$3/2$$, che significa moltiplicare per $$2/3$$</li>
+                                <li>Errori nei segni: il secondo termine ha segno negativo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 6 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">6</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DI POTENZA</h3>
+                            <p>Calcola: $$\int \frac{2-5x}{x^2}dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Separare la frazione in due termini e semplificare.
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Separare la frazione:</strong> $$\int \frac{2-5x}{x^2}dx = \int \left(\frac{2}{x^2} - \frac{5x}{x^2}\right)dx$$</div>
+                            <div class="step" data-step="2"><strong>Semplificare:</strong> $$\int \left(2x^{-2} - 5x^{-1}\right)dx$$</div>
+                            <div class="step" data-step="3"><strong>Integrare:</strong> $$2 \cdot \frac{x^{-1}}{-1} - 5 \ln|x| + C$$</div>
+                            <div class="step" data-step="4">$$= -\frac{2}{x} - 5\ln|x| + C$$</div>
+                        </div>
+                        <div class="formula">$$\int \frac{2-5x}{x^2}dx = -\frac{2}{x} - 5\ln|x| + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> $$\frac{d}{dx}\left[-\frac{2}{x} - 5\ln|x|\right] = \frac{2}{x^2} - \frac{5}{x} = \frac{2-5x}{x^2}$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Non separare la frazione prima di integrare</li>
+                                <li>Dimenticare che $$x^{-1}$$ si integra a $$\ln|x|$$</li>
+                                <li>Sbagliare i segni nella separazione</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 7 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">7</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DELLA FUNZIONE ESPONENZIALE</h3>
+                            <p>Calcola: $$\int (3e^x + 2)dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Ricorda:</strong> $$\int e^x dx = e^x + C$$ (la primitiva di $$e^x$$ è se stessa!)
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Separare:</strong> $$\int 3e^x dx + \int 2 dx$$</div>
+                            <div class="step" data-step="2"><strong>Primo integrale:</strong> $$3\int e^x dx = 3e^x$$</div>
+                            <div class="step" data-step="3"><strong>Secondo integrale:</strong> $$\int 2 dx = 2x$$ (integrale di costante)</div>
+                        </div>
+                        <div class="formula">$$\int (3e^x + 2)dx = 3e^x + 2x + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> $$\frac{d}{dx}[3e^x + 2x] = 3e^x + 2$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Scrivere $$e^{x+1}$$ o altre varianti: NO! $$\int e^x dx = e^x$$</li>
+                                <li>Dimenticare che la costante $$2$$ si integra come $$2x$$</li>
+                                <li>Confondere con $$\int a^x dx = \frac{a^x}{\ln a}$$ (formula per basi diverse da $$e$$)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 8 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">8</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DI BASI DIVERSE</h3>
+                            <p>Calcola: $$\int (2 \cdot 3^x - 7^x)dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Formula chiave:</strong> $$\int a^x dx = \frac{a^x}{\ln a} + C$$ (con $$a > 0, a \neq 1$$)
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Separare:</strong> $$\int 2 \cdot 3^x dx - \int 7^x dx$$</div>
+                            <div class="step" data-step="2"><strong>Primo integrale:</strong> $$2\int 3^x dx = 2 \cdot \frac{3^x}{\ln 3}$$</div>
+                            <div class="step" data-step="3"><strong>Secondo integrale:</strong> $$\int 7^x dx = \frac{7^x}{\ln 7}$$</div>
+                        </div>
+                        <div class="formula">$$\int (2 \cdot 3^x - 7^x)dx = \frac{2 \cdot 3^x}{\ln 3} - \frac{7^x}{\ln 7} + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Ricorda:</strong> La formula $$\frac{a^x}{\ln a}$$ si applica SOLO per basi diverse da $$e$$. Per $$e^x$$ il logaritmo naturale di $$e$$ è $$1$$, quindi il denominatore scompare!
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Usare $$\log_{10}$$ al posto di $$\ln$$ (logaritmo naturale)</li>
+                                <li>Dimenticare il denominatore $$\ln a$$</li>
+                                <li>Pensare che $$\int 3^x dx = \frac{3^{x+1}}{x+1}$$: SBAGLIATO!</li>
+                                <li>Non dividere per $$\ln a$$ quando la base non è $$e$$</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 9 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">9</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DELLE FUNZIONI GONIOMETRICHE</h3>
+                            <p>Calcola: $$\int (3x + 5\sin x)dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Formule fondamentali:</strong>
+                            <ul>
+                                <li>$$\int \sin x dx = -\cos x + C$$</li>
+                                <li>$$\int \cos x dx = \sin x + C$$</li>
+                            </ul>
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Separare:</strong> $$\int 3x dx + \int 5\sin x dx$$</div>
+                            <div class="step" data-step="2"><strong>Primo integrale (potenza):</strong> $$3\int x dx = 3 \cdot \frac{x^2}{2} = \frac{3x^2}{2}$$</div>
+                            <div class="step" data-step="3"><strong>Secondo integrale (seno):</strong> $$5\int \sin x dx = 5 \cdot (-\cos x) = -5\cos x$$</div>
+                        </div>
+                        <div class="formula">$$\int (3x + 5\sin x)dx = \frac{3x^2}{2} - 5\cos x + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> $$\frac{d}{dx}\left[\frac{3x^2}{2} - 5\cos x\right] = 3x + 5\sin x$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Dimenticare il segno negativo: $$\int \sin x = -\cos x$$ (non $$+\cos x$$)</li>
+                                <li>Confondere $$\sin x$$ con $$\cos x$$ nelle primitive</li>
+                                <li>Sbagliare i segni nelle derivate trigonometriche</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 10 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">10</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DELLE FUNZIONI GONIOMETRICHE</h3>
+                            <p>Calcola: $$\int \left(\frac{1}{\cos^2 x} - 3\cos x\right)dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Formule chiave:</strong>
+                            <ul>
+                                <li>$$\frac{1}{\cos^2 x} = \sec^2 x$$ e $$\int \sec^2 x dx = \tan x + C$$</li>
+                                <li>$$\int \cos x dx = \sin x + C$$</li>
+                            </ul>
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Riscrivere:</strong> $$\frac{1}{\cos^2 x} = \sec^2 x$$</div>
+                            <div class="step" data-step="2"><strong>Separare:</strong> $$\int \sec^2 x dx - \int 3\cos x dx$$</div>
+                            <div class="step" data-step="3"><strong>Primo integrale:</strong> $$\int \sec^2 x dx = \tan x$$</div>
+                            <div class="step" data-step="4"><strong>Secondo integrale:</strong> $$-3\int \cos x dx = -3\sin x$$</div>
+                        </div>
+                        <div class="formula">$$\int \left(\frac{1}{\cos^2 x} - 3\cos x\right)dx = \tan x - 3\sin x + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> $$\frac{d}{dx}[\tan x - 3\sin x] = \sec^2 x - 3\cos x = \frac{1}{\cos^2 x} - 3\cos x$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Non riconoscere che $$\frac{1}{\cos^2 x} = \sec^2 x$$</li>
+                                <li>Confondere $$\int \sec^2 x dx$$ con $$\int \csc^2 x dx$$ (che dà $$-\cot x$$)</li>
+                                <li>Sbagliare il segno finale o gli argomenti delle funzioni</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 11 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">11</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DI FUNZIONE COMPOSTA</h3>
+                            <p>Calcola: $$\int x(5x^2 - 4)^7 dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Riconoscere la composizione e usare la formula $$\int f'(x) [f(x)]^n dx = \frac{[f(x)]^{n+1}}{n+1} + C$$
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Osserva:</strong> Se poni $$u = 5x^2 - 4$$, allora $$\frac{du}{dx} = 10x$$, cioè $$x dx = \frac{du}{10}$$</div>
+                            <div class="step" data-step="2"><strong>Sostituisci:</strong> $$\int (5x^2 - 4)^7 \cdot x dx = \int u^7 \cdot \frac{du}{10} = \frac{1}{10}\int u^7 du$$</div>
+                            <div class="step" data-step="3"><strong>Integra:</strong> $$\frac{1}{10} \cdot \frac{u^8}{8} = \frac{u^8}{80}$$</div>
+                            <div class="step" data-step="4"><strong>Ritorna alla variabile originale:</strong> $$u = 5x^2 - 4$$</div>
+                        </div>
+                        <div class="formula">$$\int x(5x^2 - 4)^7 dx = \frac{(5x^2 - 4)^8}{80} + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> Derivando con la catena: $$\frac{d}{dx}\left[\frac{(5x^2 - 4)^8}{80}\right] = \frac{8(5x^2 - 4)^7 \cdot 10x}{80} = (5x^2 - 4)^7 \cdot x$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Dimenticare che quando fai la sostituzione, devi anche trasformare $$dx$$</li>
+                                <li>Integrare come se fosse $$(5x^2)^7$$: SBAGLIATO!</li>
+                                <li>Non riconoscere che $$x dx$$ è esattamente una frazione di $$d(5x^2 - 4)$$</li>
+                                <li>Dimenticare il $$\frac{1}{80}$$ finale</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 12 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">12</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DI FUNZIONE COMPOSTA</h3>
+                            <p>Calcola: $$\int 5xe^x dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Osserva che $$\frac{d}{dx}(xe^x) = e^x + xe^x = (x+1)e^x$$. Oppure usa un approccio diretto.
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Osserva il differenziale:</strong> $$\frac{d}{dx}(e^x) = e^x$$ e $$\frac{d}{dx}(5x) = 5$$</div>
+                            <div class="step" data-step="2"><strong>Cerca una primitiva per il prodotto:</strong> Se $$F'(x) = 5xe^x$$, allora prova $$F(x) = 5(x-1)e^x$$</div>
+                            <div class="step" data-step="3"><strong>Verifica derivando:</strong> $$\frac{d}{dx}[5(x-1)e^x] = 5e^x + 5(x-1)e^x = 5e^x[1 + x - 1] = 5xe^x$$ ✓</div>
+                        </div>
+                        <div class="formula">$$\int 5xe^x dx = 5(x-1)e^x + C = 5e^x(x-1) + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> Derivando: $$\frac{d}{dx}[5e^x(x-1)] = 5e^x(x-1) + 5e^x = 5xe^x$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Non riconoscere la struttura del prodotto esponenziale</li>
+                                <li>Dimenticare il termine $$(x-1)$$</li>
+                                <li>Sbagliare i segni</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 13 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">13</div>
+                        <div class="exercise-text-content">
+                            <h3>PRIMITIVA DEL LOGARITMO</h3>
+                            <p>Calcola: $$\int \frac{x^3}{x^4+5} dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Formula della primitiva del logaritmo: $$\int \frac{f'(x)}{f(x)} dx = \ln|f(x)| + C$$
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Osserva il denominatore:</strong> $$\frac{d}{dx}(x^4 + 5) = 4x^3$$</div>
+                            <div class="step" data-step="2"><strong>Il numeratore è $$x^3$$, che è $$\frac{1}{4}$$ di $$4x^3$$!</strong> Riscriviti l'integrale</div>
+                            <div class="step" data-step="3"><strong>Riscrivere:</strong> $$\int \frac{x^3}{x^4+5}dx = \frac{1}{4}\int \frac{4x^3}{x^4+5}dx$$</div>
+                            <div class="step" data-step="4"><strong>Riconosci il logaritmo:</strong> $$\frac{1}{4}\int \frac{d(x^4+5)}{x^4+5} = \frac{1}{4}\ln|x^4+5|$$</div>
+                        </div>
+                        <div class="formula">$$\int \frac{x^3}{x^4+5} dx = \frac{1}{4}\ln|x^4+5| + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> $$\frac{d}{dx}\left[\frac{1}{4}\ln|x^4+5|\right] = \frac{1}{4} \cdot \frac{4x^3}{x^4+5} = \frac{x^3}{x^4+5}$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Non riconoscere il legame tra numeratore e derivata del denominatore</li>
+                                <li>Integrare come se fosse $$x^3 \cdot \frac{1}{x^4+5}$$: SBAGLIATO!</li>
+                                <li>Dimenticare il fattore $$\frac{1}{4}$$</li>
+                                <li>Scrivere $$\ln$$ senza le barre di valore assoluto</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 14 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">14</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRALE DI FUNZIONI GONIOMETRICHE</h3>
+                            <p>Calcola: $$\int (\sin 5x - 3\cos 3x) dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Formule:</strong>
+                            <ul>
+                                <li>$$\int \sin(kx) dx = -\frac{\cos(kx)}{k} + C$$</li>
+                                <li>$$\int \cos(kx) dx = \frac{\sin(kx)}{k} + C$$</li>
+                            </ul>
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Separare:</strong> $$\int \sin 5x dx - 3\int \cos 3x dx$$</div>
+                            <div class="step" data-step="2"><strong>Primo integrale:</strong> $$\int \sin 5x dx = -\frac{\cos 5x}{5}$$</div>
+                            <div class="step" data-step="3"><strong>Secondo integrale:</strong> $$-3\int \cos 3x dx = -3 \cdot \frac{\sin 3x}{3} = -\sin 3x$$</div>
+                        </div>
+                        <div class="formula">$$\int (\sin 5x - 3\cos 3x) dx = -\frac{\cos 5x}{5} - \sin 3x + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> $$\frac{d}{dx}\left[-\frac{\cos 5x}{5} - \sin 3x\right] = \sin 5x - 3\cos 3x$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Dimenticare di dividere per l'argomento (il $$5$$ o il $$3$$)</li>
+                                <li>Sbagliare i segni: $$\int \sin(kx) = -\frac{\cos(kx)}{k}$$</li>
+                                <li>Confondere $$\sin$$ e $$\cos$$</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 15 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">15</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRAZIONE PER SOSTITUZIONE</h3>
+                            <p>Calcola l'integrale indefinito $$\int \frac{x}{\sqrt{3x+1}} dx$$ con il metodo di sostituzione.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Sostituzione per semplificare la radice. Poni $$t = 3x + 1$$.
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Sostituzione:</strong> Poni $$t = 3x + 1$$</div>
+                            <div class="step" data-step="2"><strong>Ricava x:</strong> $$x = \frac{t-1}{3}$$</div>
+                            <div class="step" data-step="3"><strong>Calcola il differenziale:</strong> $$dt = 3dx$$, quindi $$dx = \frac{dt}{3}$$</div>
+                            <div class="step" data-step="4"><strong>Sostituisci:</strong> $$\int \frac{(t-1)/3}{\sqrt{t}} \cdot \frac{dt}{3} = \frac{1}{9}\int \frac{t-1}{\sqrt{t}} dt$$</div>
+                            <div class="step" data-step="5"><strong>Separa:</strong> $$\frac{1}{9}\int \left(\frac{t}{\sqrt{t}} - \frac{1}{\sqrt{t}}\right)dt = \frac{1}{9}\int (t^{1/2} - t^{-1/2})dt$$</div>
+                            <div class="step" data-step="6"><strong>Integra:</strong> $$\frac{1}{9}\left[\frac{t^{3/2}}{3/2} - \frac{t^{1/2}}{1/2}\right] + C = \frac{1}{9}\left[\frac{2t^{3/2}}{3} - 2t^{1/2}\right] + C$$</div>
+                            <div class="step" data-step="7"><strong>Semplifica:</strong> $$\frac{2t^{3/2}}{27} - \frac{2t^{1/2}}{9} = \frac{2t^{1/2}}{27}(t - 3) = \frac{2\sqrt{t}(t-3)}{27}$$</div>
+                            <div class="step" data-step="8"><strong>Ritorna a x:</strong> $$t = 3x + 1$$</div>
+                        </div>
+                        <div class="formula">$$\int \frac{x}{\sqrt{3x+1}} dx = \frac{2\sqrt{3x+1}(3x+1-3)}{27} + C = \frac{2\sqrt{3x+1}(3x-2)}{27} + C$$</div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Dimenticare di trasformare anche $$dx$$ quando cambi variabile</li>
+                                <li>Non semplificare correttamente le radici</li>
+                                <li>Sbagliare nell'esprimere $$\sqrt{t} \cdot t$$</li>
+                                <li>Dimenticare di tornare alla variabile originale alla fine</li>
+                                <li>Errori algebrici nel calcolo dei coefficienti finali</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 16 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">16</div>
+                        <div class="exercise-text-content">
+                            <h3>INTEGRAZIONE PER PARTI</h3>
+                            <p>Calcola: $$\int 2xe^x dx$$</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="technique-box">
+                            <strong>Formula per parti:</strong> $$\int u \, dv = uv - \int v \, du$$
+                            <br><br>
+                            <strong>Regola pratica (LIATE):</strong> Scegli $$u$$ = funzione che viene "semplificata" derivando (L=Log, I=Inversa, A=Algebrica, T=Trig, E=Esponenziale)
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Scegli $$u$$ e $$dv$$:</strong> $$u = 2x$$ (algebrica), $$dv = e^x dx$$ (esponenziale)</div>
+                            <div class="step" data-step="2"><strong>Calcola $$du$$ e $$v$$:</strong> $$du = 2dx$$, $$v = e^x$$</div>
+                            <div class="step" data-step="3"><strong>Applica la formula:</strong> $$\int 2xe^x dx = 2x \cdot e^x - \int e^x \cdot 2 dx$$</div>
+                            <div class="step" data-step="4"><strong>Semplifica:</strong> $$= 2xe^x - 2\int e^x dx$$</div>
+                            <div class="step" data-step="5"><strong>Integra $$e^x$$:</strong> $$= 2xe^x - 2e^x$$</div>
+                            <div class="step" data-step="6"><strong>Raccogli $$e^x$$:</strong> $$= e^x(2x - 2) = 2e^x(x-1)$$</div>
+                        </div>
+                        <div class="formula">$$\int 2xe^x dx = 2e^x(x-1) + C$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong> Derivando con la regola del prodotto: $$\frac{d}{dx}[2e^x(x-1)] = 2e^x(x-1) + 2e^x = 2e^x \cdot x$$ ✓
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Scelta sbagliata di $$u$$ e $$dv$$: Non scegliere $$e^x$$ come $$u$$!</li>
+                                <li>Dimenticare il segno meno nella formula: $$\int u \, dv = uv - \int v \, du$$</li>
+                                <li>Sbagliare i segni nel raccoglimento finale</li>
+                                <li>Non semplificare completamente il risultato</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 17 -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">17</div>
+                        <div class="exercise-text-content">
+                            <h3>PROBLEMA CON INTEGRALE INDEFINITO</h3>
+                            <p>Tra le primitive della funzione $$f(x) = \frac{4x-2}{x^2-x}$$, determina quella il cui grafico interseca l'asse x nel punto di ascissa 2.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Interpretazione del problema</div>
+                        <div class="technique-box">
+                            <strong>Cosa significa:</strong> Il grafico interseca l'asse x (ascissa = 2 significa $$x = 2$$, e "interseca l'asse x" significa $$y = 0$$). Quindi devi trovare la primitiva tale che $$F(2) = 0$$.
+                        </div>
+                    </div>
+
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione</div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Fattorizza il denominatore:</strong> $$x^2 - x = x(x-1)$$</div>
+                            <div class="step" data-step="2"><strong>Usa la scomposizione in fratti semplici:</strong> $$\frac{4x-2}{x(x-1)} = \frac{A}{x} + \frac{B}{x-1}$$</div>
+                            <div class="step" data-step="3"><strong>Trova A e B:</strong> $$4x - 2 = A(x-1) + Bx$$. Poni $$x=0$$: $$-2 = -A \Rightarrow A = 2$$. Poni $$x=1$$: $$2 = B$$</div>
+                            <div class="step" data-step="4"><strong>Integra:</strong> $$\int \left(\frac{2}{x} + \frac{2}{x-1}\right)dx = 2\ln|x| + 2\ln|x-1| + C$$</div>
+                            <div class="step" data-step="5"><strong>Semplifica:</strong> $$F(x) = 2\ln|x(x-1)| + C$$</div>
+                            <div class="step" data-step="6"><strong>Usa la condizione $$F(2) = 0$$:</strong> $$2\ln|2 \cdot 1| + C = 0$$, cioè $$2\ln 2 + C = 0$$</div>
+                            <div class="step" data-step="7"><strong>Trova C:</strong> $$C = -2\ln 2$$</div>
+                        </div>
+                        <div class="formula">$$F(x) = 2\ln|x(x-1)| - 2\ln 2 = 2\ln\left|\frac{x(x-1)}{2}\right| = 2\ln\left|\frac{x^2-x}{2}\right|$$</div>
+                        <div class="success-box">
+                            <strong>✓ Verifica:</strong>
+                            <ul>
+                                <li>$$F(2) = 2\ln|2 \cdot 1| - 2\ln 2 = 2\ln 2 - 2\ln 2 = 0$$ ✓</li>
+                                <li>$$F'(x) = \frac{2(2x-1)}{x(x-1)} = \frac{4x-2}{x^2-x} = f(x)$$ ✓</li>
+                            </ul>
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Non semplificare il denominatore in fattori</li>
+                                <li>Dimenticare di usare la condizione iniziale per trovare C</li>
+                                <li>Errori nella scomposizione in fratti semplici</li>
+                                <li>Sbagliare il significato di "interseca l'asse x" (deve essere $$y=0$$)</li>
+                                <li>Non usare i valori assoluti nei logaritmi</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROVA A -->
+        <div id="provaA" class="tab-content">
+            <!-- Esercizio 1A -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">1</div>
+                        <div class="exercise-text-content">
+                            <h3>Calcola i seguenti integrali</h3>
+                            <p class="subtext">Prova A - Esercizio 1 <span class="points">/15</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">a) $$\int (8x - 2)dx$$</div>
+                        <div class="formula">
+                            $$\int (8x - 2)dx = 8 \cdot \frac{x^2}{2} - 2x + C = 4x^2 - 2x + C$$
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}[4x^2 - 2x] = 8x - 2$$ ✓</div>
+                    </div>
+
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">b) $$\int (6x^3 - 3e^x)dx$$</div>
+                        <div class="formula">
+                            $$\int (6x^3 - 3e^x)dx = 6 \cdot \frac{x^4}{4} - 3e^x + C = \frac{3x^4}{2} - 3e^x + C$$
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}\left[\frac{3x^4}{2} - 3e^x\right] = 6x^3 - 3e^x$$ ✓</div>
+                    </div>
+
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">c) $$\int (-\cos x + 6x^2)dx$$</div>
+                        <div class="formula">
+                            $$\int (-\cos x + 6x^2)dx = -\sin x + 6 \cdot \frac{x^3}{3} + C = -\sin x + 2x^3 + C$$
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}[-\sin x + 2x^3] = -\cos x + 6x^2$$ ✓</div>
+                    </div>
+
+                    <div class="error-box">
+                        <strong>⚠️ Errori comuni:</strong>
+                        <ul>
+                            <li>Sbagliare i coefficienti durante la divisione per l'esponente</li>
+                            <li>Dimenticare le costanti nella primitiva di $$e^x$$ (il coefficiente -3 rimane!)</li>
+                            <li>Confondere $$\int \cos x = \sin x$$ con $$\int \sin x = -\cos x$$</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 2A -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">2</div>
+                        <div class="exercise-text-content">
+                            <h3>Calcola i seguenti integrali (funzioni composte)</h3>
+                            <p class="subtext">Prova A - Esercizio 2 <span class="points">/15</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">a) $$\int xe^{x^2+3}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Sostituzione. Poni $$u = x^2 + 3$$, allora $$du = 2x dx$$, cioè $$x dx = \frac{du}{2}$$
+                        </div>
+                        <div class="formula">
+                            $$\int xe^{x^2+3}dx = \int e^u \cdot \frac{du}{2} = \frac{1}{2}e^u + C = \frac{1}{2}e^{x^2+3} + C$$
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}\left[\frac{1}{2}e^{x^2+3}\right] = \frac{1}{2}e^{x^2+3} \cdot 2x = xe^{x^2+3}$$ ✓</div>
+                    </div>
+
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">b) $$\int \frac{2x^3}{2x^4+1}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Primitiva del logaritmo. Notiamo che $$\frac{d}{dx}(2x^4+1) = 8x^3$$
+                        </div>
+                        <div class="formula">
+                            $$\int \frac{2x^3}{2x^4+1}dx = \frac{1}{4}\int \frac{8x^3}{2x^4+1}dx = \frac{1}{4}\ln|2x^4+1| + C$$
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}\left[\frac{1}{4}\ln|2x^4+1|\right] = \frac{1}{4} \cdot \frac{8x^3}{2x^4+1} = \frac{2x^3}{2x^4+1}$$ ✓</div>
+                    </div>
+
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">c) $$\int x\sqrt{4-x^2}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Sostituzione. Poni $$u = 4-x^2$$, allora $$du = -2x dx$$, cioè $$x dx = -\frac{du}{2}$$
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1">Sostituzione: $$u = 4-x^2 \Rightarrow du = -2x dx \Rightarrow x dx = -\frac{du}{2}$$</div>
+                            <div class="step" data-step="2">$$\int x\sqrt{4-x^2}dx = \int \sqrt{u} \cdot \left(-\frac{du}{2}\right) = -\frac{1}{2}\int u^{1/2} du$$</div>
+                            <div class="step" data-step="3">$$= -\frac{1}{2} \cdot \frac{u^{3/2}}{3/2} + C = -\frac{1}{3}u^{3/2} + C$$</div>
+                            <div class="step" data-step="4">$$= -\frac{1}{3}(4-x^2)^{3/2} + C$$</div>
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> Derivando con la catena: $$\frac{d}{dx}\left[-\frac{1}{3}(4-x^2)^{3/2}\right] = -\frac{1}{3} \cdot \frac{3}{2}(4-x^2)^{1/2} \cdot (-2x) = x\sqrt{4-x^2}$$ ✓</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 3A -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">3</div>
+                        <div class="exercise-text-content">
+                            <h3>Calcola i seguenti integrali</h3>
+                            <p class="subtext">Prova A - Esercizio 3 <span class="points">/15</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">a) $$\int \frac{x-4}{x+3}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Divisione polinomiale. Riscrivere il numeratore in funzione del denominatore.
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1">Riscrivere: $$x - 4 = (x+3) - 7$$</div>
+                            <div class="step" data-step="2">$$\int \frac{x-4}{x+3}dx = \int \frac{(x+3)-7}{x+3}dx = \int \left(1 - \frac{7}{x+3}\right)dx$$</div>
+                            <div class="step" data-step="3">$$= \int 1 dx - 7\int \frac{1}{x+3}dx$$</div>
+                            <div class="step" data-step="4">$$= x - 7\ln|x+3| + C$$</div>
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}[x - 7\ln|x+3|] = 1 - \frac{7}{x+3} = \frac{x+3-7}{x+3} = \frac{x-4}{x+3}$$ ✓</div>
+                    </div>
+
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">b) $$\int x \sin 2x^2 dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Sostituzione. Poni $$u = 2x^2$$, allora $$du = 4x dx$$
+                        </div>
+                        <div class="formula">
+                            $$\int x \sin 2x^2 dx = \frac{1}{4}\int \sin u \, du = \frac{1}{4} \cdot (-\cos u) + C = -\frac{1}{4}\cos 2x^2 + C$$
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}\left[-\frac{1}{4}\cos 2x^2\right] = -\frac{1}{4} \cdot (-\sin 2x^2) \cdot 4x = x\sin 2x^2$$ ✓</div>
+                    </div>
+
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">c) $$\int \frac{\ln 5x}{x}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Sostituzione. Poni $$u = \ln 5x$$, allora $$du = \frac{1}{x}dx$$
+                        </div>
+                        <div class="formula">
+                            $$\int \frac{\ln 5x}{x}dx = \int u \, du = \frac{u^2}{2} + C = \frac{(\ln 5x)^2}{2} + C$$
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}\left[\frac{(\ln 5x)^2}{2}\right] = \frac{2\ln 5x}{2} \cdot \frac{1}{x} = \frac{\ln 5x}{x}$$ ✓</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 4A -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">4</div>
+                        <div class="exercise-text-content">
+                            <h3>Primitive e grafici</h3>
+                            <p>Scrivi due primitive della funzione $$f(x) = \frac{2x^2+5x}{x}$$ e traccia i loro grafici nello stesso piano cartesiano.</p>
+                            <p class="subtext">Prova A - Esercizio 4 <span class="points">/15</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione Dettagliata</div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Semplificare la funzione:</strong> $$f(x) = \frac{2x^2+5x}{x} = 2x + 5$$</div>
+                            <div class="step" data-step="2"><strong>Integrare:</strong> $$\int (2x+5)dx = x^2 + 5x + C$$</div>
+                            <div class="step" data-step="3"><strong>Prime due primitive:</strong> scegli due valori di C, ad esempio $$C = 0$$ e $$C = 3$$</div>
+                        </div>
+                        <div class="success-box">
+                            <strong>Due primitive:</strong>
+                            <ul>
+                                <li>$$F_1(x) = x^2 + 5x$$ (con C = 0)</li>
+                                <li>$$F_2(x) = x^2 + 5x + 3$$ (con C = 3)</li>
+                            </ul>
+                        </div>
+                        <div class="technique-box">
+                            <strong>Interpretazione grafica:</strong> I due grafici sono parabole identiche (stessa forma e concavità) traslatate verticalmente di 3 unità. Una non passa mai per l'origine, l'altra passa per (0, 3).
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Non semplificare la frazione: devi dividere numeratore e denominatore per x!</li>
+                                <li>Dimenticare che le primitive differiscono solo per una costante</li>
+                                <li>Sbagliare il grafico (dovrebbero essere paralleli verticalmente)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 5A -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">5</div>
+                        <div class="exercise-text-content">
+                            <h3>Trovare la funzione dalle condizioni</h3>
+                            <p>La funzione $$f(x)$$ è derivabile in $$\mathbb{R}$$ con derivata $$f'(x) = -e^{-x} + x$$ e il suo grafico passa per il punto (0; 2). Trova $$f(x)$$ e l'insieme delle sue primitive $$F(x) + c$$ con $$c \in \mathbb{R}$$.</p>
+                            <p class="subtext">Prova A - Esercizio 5 <span class="points">/20</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Parte 1: Trovare f(x)</div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Integrare la derivata:</strong> $$f(x) = \int (-e^{-x} + x)dx$$</div>
+                            <div class="step" data-step="2"><strong>Calcolare l'integrale:</strong> $$\int (-e^{-x})dx = e^{-x}$$ e $$\int x dx = \frac{x^2}{2}$$</div>
+                            <div class="step" data-step="3"><strong>Risultato:</strong> $$f(x) = e^{-x} + \frac{x^2}{2} + K$$ (dove K è una costante)</div>
+                            <div class="step" data-step="4"><strong>Usare la condizione:</strong> Il grafico passa per (0, 2), quindi $$f(0) = 2$$</div>
+                            <div class="step" data-step="5">$$f(0) = e^0 + 0 + K = 1 + K = 2 \Rightarrow K = 1$$</div>
+                            <div class="step" data-step="6"><strong>Soluzione:</strong> $$f(x) = e^{-x} + \frac{x^2}{2} + 1$$</div>
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> 
+                            <ul>
+                                <li>$$f(0) = 1 + 0 + 1 = 2$$ ✓</li>
+                                <li>$$f'(x) = -e^{-x} + x$$ ✓</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="solution-section">
+                        <div class="section-title">Parte 2: Insieme delle primitive F(x) + c</div>
+                        <div class="technique-box">
+                            <strong>Ricorda:</strong> Se $$f(x)$$ è una funzione, l'insieme di tutte le sue primitive è $$F(x) + c$$ dove $$F(x)$$ è UNA primitiva (qualsiasi) e $$c$$ è una costante arbitraria.
+                        </div>
+                        <div class="formula">
+                            $$F(x) + c = \int f(x)dx = \int \left(e^{-x} + \frac{x^2}{2} + 1\right)dx$$
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1">$$F(x) = -e^{-x} + \frac{x^3}{6} + x + C$$</div>
+                            <div class="step" data-step="2"><strong>Rinominando C con c:</strong> $$F(x) + c = -e^{-x} + \frac{x^3}{6} + x + c, \quad c \in \mathbb{R}$$</div>
+                        </div>
+                    </div>
+
+                    <div class="error-box">
+                        <strong>⚠️ Attenzione:</strong>
+                        <ul>
+                            <li>Distinguere tra $$f(x)$$ (la funzione data) e $$F(x)$$ (la primitiva di f)</li>
+                            <li>Ricordare che $$\int e^{-x}dx = -e^{-x}$$, non $$e^{-x}$$</li>
+                            <li>Non confondere: il testo chiede sia f(x) che F(x)!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 6A -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">6</div>
+                        <div class="exercise-text-content">
+                            <h3>Leggi il grafico</h3>
+                            <p>Tra le primitive $$F(x)$$ della funzione $$f(x) = 6x \cos 3x^2$$, determina quella rappresentata nel grafico.</p>
+                            <p class="subtext">Prova A - Esercizio 6 <span class="points">/20</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione</div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Integrare f(x):</strong> $$\int 6x \cos 3x^2 dx$$</div>
+                            <div class="step" data-step="2"><strong>Sostituzione:</strong> Poni $$u = 3x^2$$, allora $$du = 6x dx$$</div>
+                            <div class="step" data-step="3">$$\int \cos u \, du = \sin u + C = \sin(3x^2) + C$$</div>
+                            <div class="step" data-step="4"><strong>Famiglia di primitive:</strong> $$F(x) = \sin(3x^2) + C$$</div>
+                            <div class="step" data-step="5"><strong>Usare il grafico:</strong> Dal grafico si legge un punto, ad esempio se il grafico passa per (0, 1), allora $$F(0) = 1$$</div>
+                            <div class="step" data-step="6">$$\sin(0) + C = 1 \Rightarrow C = 1$$</div>
+                            <div class="step" data-step="7"><strong>Soluzione:</strong> $$F(x) = \sin(3x^2) + 1$$</div>
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}[\sin(3x^2) + 1] = \cos(3x^2) \cdot 6x = 6x\cos(3x^2)$$ ✓</div>
+                        <div class="error-box">
+                            <strong>⚠️ Nota importante:</strong> Leggi attentamente dal grafico: quale punto passa? Quel punto ti dà il valore di C!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROVA B -->
+        <div id="provaB" class="tab-content">
+            <!-- Esercizio 1B -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">1</div>
+                        <div class="exercise-text-content">
+                            <h3>Calcola i seguenti integrali</h3>
+                            <p class="subtext">Prova B - Esercizio 1 <span class="points">/20</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">a) $$\int \frac{3 \ln x^2}{x}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Osservazione:</strong> $$\ln x^2 = 2\ln x$$, quindi $$3\ln x^2 = 6\ln x$$
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1">$$\int \frac{3\ln x^2}{x}dx = \int \frac{6\ln x}{x}dx$$</div>
+                            <div class="step" data-step="2">Poni $$u = \ln x$$, allora $$du = \frac{1}{x}dx$$</div>
+                            <div class="step" data-step="3">$$6\int u \, du = 6 \cdot \frac{u^2}{2} + C = 3(\ln x)^2 + C$$</div>
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}[3(\ln x)^2] = 3 \cdot 2\ln x \cdot \frac{1}{x} = \frac{6\ln x}{x}$$ ✓</div>
+                    </div>
+
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">b) $$\int x^2 e^{-x}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Integrazione per parti (2 volte). Formula: $$\int u \, dv = uv - \int v \, du$$
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Prima integrazione:</strong> Poni $$u = x^2$$, $$dv = e^{-x}dx$$</div>
+                            <div class="step" data-step="2">$$du = 2x dx$$, $$v = -e^{-x}$$</div>
+                            <div class="step" data-step="3">$$\int x^2 e^{-x}dx = -x^2 e^{-x} - \int (-e^{-x}) \cdot 2x dx = -x^2 e^{-x} + 2\int x e^{-x}dx$$</div>
+                            <div class="step" data-step="4"><strong>Seconda integrazione:</strong> Per $$\int x e^{-x}dx$$, poni $$u = x$$, $$dv = e^{-x}dx$$</div>
+                            <div class="step" data-step="5">$$du = dx$$, $$v = -e^{-x}$$</div>
+                            <div class="step" data-step="6">$$\int x e^{-x}dx = -x e^{-x} + \int e^{-x}dx = -x e^{-x} - e^{-x}$$</div>
+                            <div class="step" data-step="7"><strong>Risultato finale:</strong> $$-x^2 e^{-x} + 2(-x e^{-x} - e^{-x}) + C = -e^{-x}(x^2 + 2x + 2) + C$$</div>
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica (difficile ma corretta):</strong> Derivando si ritrova $$x^2 e^{-x}$$ ✓</div>
+                    </div>
+
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">c) $$\int \frac{x}{\sqrt{2-x^2}}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Sostituzione. Poni $$u = 2-x^2$$, allora $$du = -2x dx$$
+                        </div>
+                        <div class="formula">
+                            $$\int \frac{x}{\sqrt{2-x^2}}dx = -\frac{1}{2}\int u^{-1/2}du = -\frac{1}{2} \cdot 2u^{1/2} + C = -\sqrt{2-x^2} + C$$
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}[-\sqrt{2-x^2}] = -\frac{1}{2\sqrt{2-x^2}} \cdot (-2x) = \frac{x}{\sqrt{2-x^2}}$$ ✓</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 2B -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">2</div>
+                        <div class="exercise-text-content">
+                            <h3>Calcola i seguenti integrali</h3>
+                            <p class="subtext">Prova B - Esercizio 2 <span class="points">/20</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">a) $$\int \frac{\sin(\ln x)}{x}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Sostituzione. Poni $$u = \ln x$$, allora $$du = \frac{1}{x}dx$$
+                        </div>
+                        <div class="formula">
+                            $$\int \frac{\sin(\ln x)}{x}dx = \int \sin u \, du = -\cos u + C = -\cos(\ln x) + C$$
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}[-\cos(\ln x)] = \sin(\ln x) \cdot \frac{1}{x}$$ ✓</div>
+                    </div>
+
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">b) $$\int \frac{x^2-4}{x^2+1}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Divisione polinomiale. Riscrivere il numeratore in termini del denominatore.
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Osserva:</strong> $$x^2 - 4 = (x^2+1) - 5$$</div>
+                            <div class="step" data-step="2">$$\int \frac{x^2-4}{x^2+1}dx = \int \frac{(x^2+1)-5}{x^2+1}dx = \int \left(1 - \frac{5}{x^2+1}\right)dx$$</div>
+                            <div class="step" data-step="3">$$= \int 1 dx - 5\int \frac{1}{x^2+1}dx$$</div>
+                            <div class="step" data-step="4">Ricorda: $$\int \frac{1}{x^2+1}dx = \arctan x + C$$</div>
+                            <div class="step" data-step="5">$$= x - 5\arctan x + C$$</div>
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> $$\frac{d}{dx}[x - 5\arctan x] = 1 - \frac{5}{x^2+1} = \frac{x^2+1-5}{x^2+1} = \frac{x^2-4}{x^2+1}$$ ✓</div>
+                    </div>
+
+                    <div class="sub-exercise">
+                        <div class="sub-exercise-label">c) $$\int \frac{x^4+4x-1}{2x^3}dx$$</div>
+                        <div class="technique-box">
+                            <strong>Tecnica:</strong> Separare la frazione e integrare termine per termine.
+                        </div>
+                        <div class="steps">
+                            <div class="step" data-step="1">$$\int \frac{x^4+4x-1}{2x^3}dx = \int \left(\frac{x^4}{2x^3} + \frac{4x}{2x^3} - \frac{1}{2x^3}\right)dx$$</div>
+                            <div class="step" data-step="2">$$= \int \left(\frac{x}{2} + \frac{2}{x^2} - \frac{1}{2x^3}\right)dx$$</div>
+                            <div class="step" data-step="3">$$= \int \frac{x}{2}dx + \int 2x^{-2}dx - \int \frac{1}{2}x^{-3}dx$$</div>
+                            <div class="step" data-step="4">$$= \frac{x^2}{4} + 2 \cdot \frac{x^{-1}}{-1} - \frac{1}{2} \cdot \frac{x^{-2}}{-2} + C$$</div>
+                            <div class="step" data-step="5">$$= \frac{x^2}{4} - \frac{2}{x} + \frac{1}{4x^2} + C$$</div>
+                        </div>
+                        <div class="success-box"><strong>✓ Verifica:</strong> Derivando si ritrova $$\frac{x^4+4x-1}{2x^3}$$ ✓</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 3B -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">3</div>
+                        <div class="exercise-text-content">
+                            <h3>Leggi il grafico</h3>
+                            <p>Tra le primitive della funzione $$f(x) = 3x^4 + 2x^3$$, determina quella rappresentata dal grafico rosso in figura. Spiega perché il grafico blu non può rappresentare alcuna primitiva di $$f(x)$$.</p>
+                            <p class="subtext">Prova B - Esercizio 3 <span class="points">/25</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Parte 1: Trovare la primitiva generale</div>
+                        <div class="steps">
+                            <div class="step" data-step="1">$$\int (3x^4 + 2x^3)dx = 3 \cdot \frac{x^5}{5} + 2 \cdot \frac{x^4}{4} + C$$</div>
+                            <div class="step" data-step="2">$$= \frac{3x^5}{5} + \frac{x^4}{2} + C$$</div>
+                        </div>
+                        <div class="technique-box">
+                            <strong>Famiglia di primitive:</strong> $$F(x) = \frac{3x^5}{5} + \frac{x^4}{2} + C$$
+                        </div>
+                    </div>
+
+                    <div class="solution-section">
+                        <div class="section-title">Parte 2: Leggere dal grafico rosso</div>
+                        <div class="steps">
+                            <div class="step" data-step="1">Dal grafico rosso, leggi un punto noto. Ad es. se passa per (0, k), allora $$F(0) = k$$</div>
+                            <div class="step" data-step="2">$$F(0) = 0 + 0 + C = k \Rightarrow C = k$$</div>
+                            <div class="step" data-step="3"><strong>La primitiva rappresentata:</strong> $$F(x) = \frac{3x^5}{5} + \frac{x^4}{2} + k$$</div>
+                        </div>
+                    </div>
+
+                    <div class="solution-section">
+                        <div class="section-title">Parte 3: Perché il grafico blu non è una primitiva?</div>
+                        <div class="technique-box">
+                            <strong>Spiegazione:</strong> 
+                            <ul>
+                                <li>Se il grafico blu NON ha derivata uguale a $$f(x) = 3x^4 + 2x^3$$, allora non è una primitiva.</li>
+                                <li>Verifica grafica: la derivata deve corrispondere all'andamento della funzione originale f(x).</li>
+                                <li>Possibili ragioni: il grafico blu ha "forme" diverse (es. massimi/minimi in posti sbagliati, oppure ha un'asintoto che f(x) non ha, etc.)</li>
+                                <li>Se il grafico blu mostra comportamenti incompatibili con una primitiva di $$f(x)$$, allora non può essere una primitiva.</li>
+                            </ul>
+                        </div>
+                        <div class="error-box">
+                            <strong>⚠️ Come verificare:</strong> 
+                            <ul>
+                                <li>Calcola $$f'(x)$$ (la derivata del grafico blu, graficamente)</li>
+                                <li>Confronta con $$f(x) = 3x^4 + 2x^3$$</li>
+                                <li>Se non coincidono, il grafico blu non è una primitiva</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 4B -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">4</div>
+                        <div class="exercise-text-content">
+                            <h3>Trovare la funzione dalle condizioni</h3>
+                            <p>Determina la funzione $$f(x)$$ tale che $$f(0) = 4$$, $$f'(\pi) = 4\pi^3$$, $$f''(x) = 3(4x^2 - \cos x)$$.</p>
+                            <p class="subtext">Prova B - Esercizio 4 <span class="points">/15</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Passaggio 1: Trovare f'(x) da f''(x)</div>
+                        <div class="steps">
+                            <div class="step" data-step="1">$$f'(x) = \int f''(x) dx = \int 3(4x^2 - \cos x)dx$$</div>
+                            <div class="step" data-step="2">$$= \int (12x^2 - 3\cos x)dx = 12 \cdot \frac{x^3}{3} - 3\sin x + K$$</div>
+                            <div class="step" data-step="3">$$f'(x) = 4x^3 - 3\sin x + K$$</div>
+                        </div>
+                    </div>
+
+                    <div class="solution-section">
+                        <div class="section-title">Passaggio 2: Usare la condizione $$f'(\pi) = 4\pi^3$$</div>
+                        <div class="steps">
+                            <div class="step" data-step="1">$$f'(\pi) = 4\pi^3 - 3\sin \pi + K = 4\pi^3$$</div>
+                            <div class="step" data-step="2">$$\sin \pi = 0$$, quindi: $$4\pi^3 - 0 + K = 4\pi^3$$</div>
+                            <div class="step" data-step="3">$$K = 0$$</div>
+                            <div class="step" data-step="4">$$f'(x) = 4x^3 - 3\sin x$$</div>
+                        </div>
+                    </div>
+
+                    <div class="solution-section">
+                        <div class="section-title">Passaggio 3: Trovare f(x) da f'(x)</div>
+                        <div class="steps">
+                            <div class="step" data-step="1">$$f(x) = \int f'(x)dx = \int (4x^3 - 3\sin x)dx$$</div>
+                            <div class="step" data-step="2">$$= 4 \cdot \frac{x^4}{4} - 3 \cdot (-\cos x) + C$$</div>
+                            <div class="step" data-step="3">$$f(x) = x^4 + 3\cos x + C$$</div>
+                        </div>
+                    </div>
+
+                    <div class="solution-section">
+                        <div class="section-title">Passaggio 4: Usare la condizione $$f(0) = 4$$</div>
+                        <div class="steps">
+                            <div class="step" data-step="1">$$f(0) = 0 + 3\cos 0 + C = 4$$</div>
+                            <div class="step" data-step="2">$$3 + C = 4 \Rightarrow C = 1$$</div>
+                            <div class="step" data-step="3"><strong>Soluzione finale:</strong> $$f(x) = x^4 + 3\cos x + 1$$</div>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <strong>✓ Verifica:</strong>
+                        <ul>
+                            <li>$$f(0) = 0 + 3 \cdot 1 + 1 = 4$$ ✓</li>
+                            <li>$$f'(x) = 4x^3 - 3\sin x$$, quindi $$f'(\pi) = 4\pi^3 - 0 = 4\pi^3$$ ✓</li>
+                            <li>$$f''(x) = 12x^2 - 3\cos x = 3(4x^2 - \cos x)$$ ✓</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Esercizio 5B -->
+            <div class="exercise">
+                <div class="exercise-text">
+                    <div class="exercise-text-header">
+                        <div class="exercise-number">5</div>
+                        <div class="exercise-text-content">
+                            <h3>Sostituzione</h3>
+                            <p>Calcola $$\int \frac{3x}{\sqrt{x+5}}dx$$ ponendo $$\sqrt{x+5} = t$$.</p>
+                            <p class="subtext">Prova B - Esercizio 5 <span class="points">/20</span></p>
+                        </div>
+                    </div>
+                </div>
+                <button class="solution-button" onclick="toggleSolution(this)">📖 Risolvi</button>
+                <div class="solution-content">
+                    <div class="solution-section">
+                        <div class="section-title">Risoluzione con la sostituzione guidata</div>
+                        <div class="steps">
+                            <div class="step" data-step="1"><strong>Poni:</strong> $$t = \sqrt{x+5}$$, quindi $$t^2 = x + 5$$</div>
+                            <div class="step" data-step="2"><strong>Ricava x:</strong> $$x = t^2 - 5$$</div>
+                            <div class="step" data-step="3"><strong>Calcola dx:</strong> $$\frac{dx}{dt} = 2t$$, quindi $$dx = 2t \, dt$$</div>
+                            <div class="step" data-step="4"><strong>Sostituisci nell'integrale:</strong> $$\int \frac{3x}{\sqrt{x+5}}dx = \int \frac{3(t^2-5)}{t} \cdot 2t \, dt$$</div>
+                            <div class="step" data-step="5">$$= \int 3(t^2-5) \cdot 2 \, dt = \int 6(t^2 - 5)dt$$</div>
+                            <div class="step" data-step="6">$$= 6 \int (t^2 - 5)dt = 6 \left(\frac{t^3}{3} - 5t\right) + C$$</div>
+                            <div class="step" data-step="7">$$= 2t^3 - 30t + C$$</div>
+                            <div class="step" data-step="8"><strong>Ritorna a x:</strong> $$t = \sqrt{x+5}$$, quindi $$t^3 = (x+5)^{3/2}$$</div>
+                            <div class="step" data-step="9">$$= 2(x+5)^{3/2} - 30\sqrt{x+5} + C$$</div>
+                        </div>
+
+                        <div class="formula">
+                            $$\boxed{\int \frac{3x}{\sqrt{x+5}}dx = 2(x+5)^{3/2} - 30\sqrt{x+5} + C}$$
+                        </div>
+
+                        <div class="success-box">
+                            <strong>✓ Verifica (parziale):</strong> 
+                            <ul>
+                                <li>Fattorizza il risultato: $$2\sqrt{x+5}[(x+5) - 15] = 2\sqrt{x+5}(x - 10)$$</li>
+                                <li>Derivando con la regola del prodotto si ritrova $$\frac{3x}{\sqrt{x+5}}$$ ✓</li>
+                            </ul>
+                        </div>
+
+                        <div class="error-box">
+                            <strong>⚠️ Errori comuni:</strong>
+                            <ul>
+                                <li>Dimenticare di trasformare anche dx quando cambi variabile!</li>
+                                <li>Sbagliare il segno o il coefficiente nella trasformazione</li>
+                                <li>Non ritornare alla variabile x alla fine</li>
+                                <li>Errori algebrici nella semplificazione (es. $$2 \cdot 3 \cdot 5 = 30$$)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📚 Questo strumento è progettato per l'autovalutazione formativa prima della verifica scritta.</p>
+            <p>💡 Utilizza le spiegazioni per comprendere i passaggi e i comuni errori da evitare.</p>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleSolution(button) {
+            const exercise = button.closest('.exercise');
+            const content = exercise.querySelector('.solution-content');
+            
+            exercise.classList.toggle('open');
+            button.classList.toggle('open');
+            content.classList.toggle('open');
+        }
+
+        // Invia il rendering a MathJax quando la pagina carica
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.MathJax) {
+                MathJax.typesetPromise().catch(err => console.log(err));
+            }
+        });
+
+        // Quando cambi tab, rende le formule nel nuovo tab
+        const tabButtons = document.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (window.MathJax) {
+                    setTimeout(() => MathJax.typesetPromise().catch(err => console.log(err)), 100);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
